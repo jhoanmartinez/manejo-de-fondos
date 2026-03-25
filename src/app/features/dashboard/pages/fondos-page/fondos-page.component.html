@@ -1,0 +1,192 @@
+<!-- Página principal: Gestión de Fondos -->
+<div class="page">
+
+  <!-- ===== ENCABEZADO ===== -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Gestión de Fondos</h1>
+      <p class="page-subtitle">Administra tus inversiones y suscripciones</p>
+    </div>
+    <!-- Chip de saldo disponible -->
+    <div class="saldo-chip" *ngIf="saldo$ | async as saldo">
+      <span class="saldo-label">Saldo disponible</span>
+      <span class="saldo-value">COP {{ saldo | number:'1.0-0' }}</span>
+    </div>
+  </div>
+
+  <!-- ===== ALERTAS DE FEEDBACK ===== -->
+  <div class="alert alert-error" *ngIf="mensajeError">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    {{ mensajeError }}
+  </div>
+  <div class="alert alert-success" *ngIf="mensajeOk">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    {{ mensajeOk }}
+  </div>
+  <!-- Error de carga desde el servicio -->
+  <div class="alert alert-error" *ngIf="error$ | async as error">{{ error }}</div>
+
+  <!-- ===== LAYOUT PRINCIPAL: tabla + formulario ===== -->
+  <div class="main-grid">
+
+    <!-- ── TABLA DE FONDOS ── -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Fondos disponibles</h2>
+        <span class="badge">{{ (fondos$ | async)?.length || 0 }} fondos</span>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Monto mínimo</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- SKELETON LOADER: visible mientras carga la API simulada -->
+            <ng-container *ngIf="loading$ | async">
+              <tr *ngFor="let row of skeletonRows" class="skeleton-row">
+                <td><div class="skeleton sk-wide"></div></td>
+                <td><div class="skeleton sk-narrow"></div></td>
+                <td><div class="skeleton sk-medium"></div></td>
+                <td><div class="skeleton sk-medium"></div></td>
+                <td><div class="skeleton sk-actions"></div></td>
+              </tr>
+            </ng-container>
+
+            <!-- DATOS REALES: visibles una vez cargados -->
+            <ng-container *ngIf="!(loading$ | async)">
+              <tr *ngFor="let fondo of fondos$ | async">
+                <td>
+                  <div class="fondo-name">{{ fondo.nombre }}</div>
+                  <div class="fondo-id">#{{ fondo.id }}</div>
+                </td>
+                <td>
+                  <span class="category-tag">{{ fondo.categoria }}</span>
+                </td>
+                <td>
+                  <span class="mono">COP {{ fondo.montoMinimo | number:'1.0-0' }}</span>
+                </td>
+                <td>
+                  <ng-container *ngIf="suscripciones$ | async as suscripciones">
+                    <span class="status-badge status-active" *ngIf="tieneSuscripcion(suscripciones, fondo.id)">
+                      <span class="dot"></span>
+                      COP {{ suscripciones[fondo.id] | number:'1.0-0' }}
+                    </span>
+                    <span class="status-badge status-inactive" *ngIf="!tieneSuscripcion(suscripciones, fondo.id)">
+                      Sin suscripción
+                    </span>
+                  </ng-container>
+                </td>
+                <td>
+                  <div class="action-group">
+                    <!-- Seleccionar pre-rellena el formulario -->
+                    <button class="btn btn-sm btn-outline" type="button"
+                      (click)="seleccionar(fondo.id, fondo.montoMinimo)">
+                      Seleccionar
+                    </button>
+                    <!-- Cancelar solo habilitado si tiene suscripción activa -->
+                    <button class="btn btn-sm btn-danger" type="button"
+                      (click)="cancelar(fondo.id)"
+                      [disabled]="!(suscripciones$ | async)?.[fondo.id]">
+                      Cancelar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── FORMULARIO DE SUSCRIPCIÓN ── -->
+    <div class="card form-card">
+      <div class="card-header">
+        <h2 class="card-title">Nueva suscripción</h2>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="suscribir()" class="invest-form">
+
+        <!-- Campo: selección de fondo -->
+        <div class="field">
+          <label class="field-label">Fondo</label>
+          <div class="select-wrap">
+            <select formControlName="fondoId" class="field-select">
+              <option [ngValue]="null" disabled>Seleccione un fondo</option>
+              <option *ngFor="let fondo of fondos$ | async" [value]="fondo.id">
+                {{ fondo.nombre }} — mín. COP {{ fondo.montoMinimo | number:'1.0-0' }}
+              </option>
+            </select>
+            <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <!-- Error de validación -->
+          <span class="field-error" *ngIf="form.get('fondoId')?.invalid && form.get('fondoId')?.touched">
+            Seleccione un fondo.
+          </span>
+        </div>
+
+        <!-- Campo: monto a invertir -->
+        <div class="field">
+          <label class="field-label">Monto a invertir</label>
+          <div class="input-wrap" [class.input-error]="form.get('monto')?.invalid && form.get('monto')?.touched">
+            <span class="input-prefix">COP</span>
+            <input class="field-input" type="number" formControlName="monto"
+              placeholder="75,000" min="1" />
+          </div>
+          <span class="field-error" *ngIf="form.get('monto')?.invalid && form.get('monto')?.touched">
+            Ingrese un monto válido mayor a 0.
+          </span>
+        </div>
+
+        <!-- Campo: canal de notificación -->
+        <div class="field">
+          <label class="field-label">Notificación vía</label>
+          <div class="radio-group">
+            <label class="radio-opt" [class.selected]="form.get('medioNotificacion')?.value === 'email'">
+              <input type="radio" formControlName="medioNotificacion" value="email" />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M3 7l9 7 9-7" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              Email
+            </label>
+            <label class="radio-opt" [class.selected]="form.get('medioNotificacion')?.value === 'sms'">
+              <input type="radio" formControlName="medioNotificacion" value="sms" />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <rect x="2" y="3" width="20" height="18" rx="3" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+              SMS
+            </label>
+          </div>
+        </div>
+
+        <!-- Botón de envío -->
+        <button class="btn btn-primary" type="submit" [disabled]="loading$ | async">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Suscribir fondo
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+</div>

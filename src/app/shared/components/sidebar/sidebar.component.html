@@ -1,0 +1,44 @@
+<nav class="sidebar">
+  <a routerLink="/" class="sidebar-brand">
+    <div class="brand-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="brand-name">Fondos</span>
+  </a>
+
+  <div class="sidebar-section-label">Navegación</div>
+
+  <ul class="sidebar-nav">
+    <li>
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <span class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="3" width="9" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/>
+            <rect x="13" y="3" width="9" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/>
+            <rect x="2" y="13" width="9" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/>
+            <rect x="13" y="13" width="9" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/>
+          </svg>
+        </span>
+        <span>Fondos disponibles</span>
+      </a>
+    </li>
+    <li>
+      <a routerLink="/dashboard/historial" routerLinkActive="active">
+        <span class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 8v4l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+          </svg>
+        </span>
+        <span>Historial</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <div class="status-dot"></div>
+    <span>Sistema activo</span>
+  </div>
+</nav>

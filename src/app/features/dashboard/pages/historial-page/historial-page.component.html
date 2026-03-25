@@ -1,0 +1,85 @@
+<!-- Página de historial de transacciones -->
+<div class="page">
+
+  <!-- ===== ENCABEZADO ===== -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Historial</h1>
+      <p class="page-subtitle">Registro completo de transacciones</p>
+    </div>
+    <!-- Contador de transacciones -->
+    <div class="tx-count" *ngIf="historial$ | async as historial">
+      <span>{{ historial.length }} transacciones</span>
+    </div>
+  </div>
+
+  <!-- ===== ESTADO VACÍO ===== -->
+  <div class="card" *ngIf="historialVacio$ | async">
+    <div class="empty-state">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" opacity="0.3">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M12 8v4M12 15h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <p>No hay transacciones registradas aún.</p>
+      <p class="empty-hint">Suscríbete a un fondo desde el dashboard para empezar.</p>
+    </div>
+  </div>
+
+  <!-- ===== TABLA DE TRANSACCIONES ===== -->
+  <div class="card" *ngIf="historialConDatos$ | async">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Fondo</th>
+          <th>Monto</th>
+          <th>Saldo anterior</th>
+          <th>Saldo actual</th>
+          <th>Notificación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tx of historial$ | async">
+
+          <!-- Fecha y hora de la transacción -->
+          <td>
+            <span class="mono text-muted">{{ tx.fecha | date:'dd MMM yy, HH:mm' }}</span>
+          </td>
+
+          <!-- Badge de tipo: Suscripción (verde) o Cancelación (rojo) -->
+          <td>
+            <span [ngClass]="tx.tipoBadgeClasses">{{ tx.tipoLabel }}</span>
+          </td>
+
+          <!-- Nombre del fondo -->
+          <td>
+            <span class="fondo-name">{{ tx.fondoNombre }}</span>
+          </td>
+
+          <!-- Monto de la transacción -->
+          <td>
+            <span class="mono amount">{{ formatoMoneda(tx.monto) }}</span>
+          </td>
+
+          <!-- Saldo antes de la transacción -->
+          <td>
+            <span class="mono text-muted">{{ formatoMoneda(tx.saldoPrevio) }}</span>
+          </td>
+
+          <!-- Saldo después: verde si subió, rojo si bajó -->
+          <td>
+            <span class="mono" [ngClass]="tx.saldoClass">{{ formatoMoneda(tx.saldoActual) }}</span>
+          </td>
+
+          <!-- Canal de notificación usado -->
+          <td>
+            <span class="notif-tag">{{ tx.medioNotificacion }}</span>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
