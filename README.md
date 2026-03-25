@@ -54,49 +54,6 @@ Luego abre tu navegador en:
 http://localhost:4200/
 ```
 
-```
-manejo-de-fondos
-├─ .editorconfig
-├─ angular.json
-├─ package-lock.json
-├─ package.json
-├─ public
-│  └─ favicon.ico
-├─ README.md
-├─ src
-│  ├─ app
-│  │  ├─ app.component.css
-│  │  ├─ app.component.html
-│  │  ├─ app.component.spec.ts
-│  │  ├─ app.component.ts
-│  │  ├─ app.config.ts
-│  │  ├─ app.routes.ts
-│  │  ├─ core
-│  │  └─ features
-│  │     ├─ dashboard
-│  │     │  ├─ dashboard.route.ts
-│  │     │  └─ pages
-│  │     │     └─ dashboard-layout
-│  │     │        ├─ dashboard-layout.component.css
-│  │     │        ├─ dashboard-layout.component.html
-│  │     │        └─ dashboard-layout.component.ts
-│  │     └─ home
-│  │        ├─ components
-│  │        ├─ home.route.ts
-│  │        └─ pages
-│  │           └─ home-layout
-│  │              ├─ home-layout.component.css
-│  │              ├─ home-layout.component.html
-│  │              └─ home-layout.component.ts
-│  ├─ index.html
-│  ├─ main.ts
-│  └─ styles.css
-├─ tsconfig.app.json
-├─ tsconfig.json
-└─ tsconfig.spec.json
-
-```
-
 ---
 
 ## Estructura del proyecto
