@@ -50,9 +50,9 @@ ng serve
 
 Luego abre tu navegador en:
 
-`bash
+```
 http://localhost:4200/
-`
+```
 
 ```
 manejo-de-fondos
@@ -95,9 +95,8 @@ manejo-de-fondos
 ├─ tsconfig.json
 └─ tsconfig.spec.json
 
-<<<<<<< HEAD
 ```
-=======
+
 ---
 
 ## Estructura del proyecto
