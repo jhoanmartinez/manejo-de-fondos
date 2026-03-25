@@ -49,7 +49,9 @@ ng serve
 ```
 
 Luego abre tu navegador en:
->>>>>>> 05aa2f0 (Revise README installation instructions and content)
+
+`http://localhost:4200/
+`
 
 ```
 manejo-de-fondos
@@ -200,4 +202,4 @@ ng serve          # Servidor de desarrollo en localhost:4200
 - No requiere backend, base de datos ni autenticación.
 - El estado se reinicia al recargar la página (comportamiento esperado para un mock local).
 - Diseño responsivo: en pantallas menores a 900px el sidebar se convierte en barra de navegación superior.
->>>>>>> 05aa2f0 (Revise README installation instructions and content)
+
