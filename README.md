@@ -157,6 +157,6 @@ ng serve          # Servidor de desarrollo en localhost:4200
 ## Notas
 
 - No requiere backend, base de datos ni autenticación.
-- El estado se reinicia al recargar la página (comportamiento esperado para un mock local).
+- El estado se mantiene al recargar la página (debido al uso del local storage).
 - Diseño responsivo: en pantallas menores a 900px el sidebar se convierte en barra de navegación superior.
 
