@@ -1,5 +1,4 @@
 
-=======
 # BTG Fondos — Prueba Técnica Front-End
 
 Aplicación web interactiva para la gestión de Fondos de Pensiones Voluntarias (FPV) y Fondos de Inversión Colectiva (FIC) para clientes BTG Pactual.
