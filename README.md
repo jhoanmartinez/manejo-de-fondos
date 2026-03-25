@@ -50,7 +50,8 @@ ng serve
 
 Luego abre tu navegador en:
 
-`http://localhost:4200/
+`bash
+http://localhost:4200/
 `
 
 ```
